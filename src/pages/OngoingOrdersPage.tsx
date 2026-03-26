@@ -200,7 +200,7 @@ const OngoingOrdersPage = () => {
         const billData = prepareBillData(order);
         
         // Dual Printer Support: Bill
-        fetch('http://localhost:5000/print/bill', {
+        fetch('http://192.168.100.10:5000/print/bill', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(billData),
@@ -316,7 +316,7 @@ const OngoingOrdersPage = () => {
     const billData = prepareBillData(orderRequiringRider, rider);
     
     // Dual Printer Support: Bill
-    fetch('http://localhost:5000/print/bill', {
+    fetch('http://192.168.100.10:5000/print/bill', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(billData),
@@ -809,7 +809,7 @@ const OngoingOrdersPage = () => {
                             const billData = prepareBillData(selectedOrder);
                             
                             // Dual Printer Support: Bill
-                            fetch('http://localhost:5000/print/bill', {
+                            fetch('http://192.168.100.10:5000/print/bill', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify(billData),

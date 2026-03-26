@@ -1,14 +1,22 @@
+const express = require('express');
+const cors = require('cors');
 const escpos = require('escpos');
 const Network = require('escpos-network');
 require('dotenv').config();
 
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+const PORT = process.env.PORT || 5000;
 const KOT_IP = process.env.KOT_PRINTER_IP;
 const BILL_IP = process.env.BILL_PRINTER_IP;
 
-const printKOT = async (order) => {
+app.post('/print/kot', async (req, res) => {
+    const order = req.body;
     if (!KOT_IP) {
-        console.error("Printer IP not configured");
-        return;
+        console.error("Printer IP not configured: KOT_PRINTER_IP");
+        return res.status(400).send({ error: "Printer IP not configured" });
     }
 
     try {
@@ -18,7 +26,7 @@ const printKOT = async (order) => {
         device.open((err) => {
             if (err) {
                 console.error("KOT Printer connection error:", err);
-                return;
+                return res.status(500).send({ error: "Printer connection error" });
             }
 
             printer
@@ -32,7 +40,7 @@ const printKOT = async (order) => {
                 .align('lt');
 
             order.items.forEach(item => {
-                printer.text(`${item.product_name || item.product.name} x ${item.quantity}`);
+                printer.text(`${item.product_name || item.product?.name || 'Item'} x ${item.quantity}`);
             });
 
             printer
@@ -41,16 +49,20 @@ const printKOT = async (order) => {
                 .text(`Date: ${new Date().toLocaleString()}`)
                 .cut()
                 .close();
+            
+            res.status(200).send({ message: "KOT printed successfully" });
         });
     } catch (error) {
         console.error("KOT Printing failed:", error);
+        res.status(500).send({ error: "KOT printing failed" });
     }
-};
+});
 
-const printBill = async (order) => {
+app.post('/print/bill', async (req, res) => {
+    const order = req.body;
     if (!BILL_IP) {
-        console.error("Printer IP not configured");
-        return;
+        console.error("Printer IP not configured: BILL_PRINTER_IP");
+        return res.status(400).send({ error: "Printer IP not configured" });
     }
 
     try {
@@ -60,7 +72,7 @@ const printBill = async (order) => {
         device.open((err) => {
             if (err) {
                 console.error("Bill Printer connection error:", err);
-                return;
+                return res.status(500).send({ error: "Printer connection error" });
             }
 
             printer
@@ -73,8 +85,8 @@ const printBill = async (order) => {
                 .align('lt');
 
             order.items.forEach(item => {
-                const price = item.price || item.product.price;
-                printer.text(`${item.product_name || item.product.name} x ${item.quantity} - ${price * item.quantity}`);
+                const price = item.price || item.product?.price || 0;
+                printer.text(`${item.product_name || item.product?.name || 'Item'} x ${item.quantity} - ${price * item.quantity}`);
             });
 
             printer
@@ -88,13 +100,15 @@ const printBill = async (order) => {
                 .text('Thank you for your visit!')
                 .cut()
                 .close();
+            
+            res.status(200).send({ message: "Bill printed successfully" });
         });
     } catch (error) {
         console.error("Bill Printing failed:", error);
+        res.status(500).send({ error: "Bill printing failed" });
     }
-};
+});
 
-module.exports = {
-    printKOT,
-    printBill
-};
+app.listen(PORT, () => {
+    console.log(`Printer server listening at http://localhost:${PORT}`);
+});

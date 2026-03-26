@@ -155,7 +155,7 @@ const CartPanel = () => {
       }
 
       // Dual Printer Support: Bill (Receipt)
-      fetch('http://localhost:5000/print/bill', {
+      fetch('http://192.168.100.10:5000/print/bill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
@@ -181,7 +181,7 @@ const CartPanel = () => {
     setLastOrder(orderData);
     
     // Removed setShowBill(true) - Using backend printer logic only
-    fetch('http://localhost:5000/print/bill', {
+    fetch('http://192.168.100.10:5000/print/bill', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData),
@@ -349,7 +349,7 @@ const CartPanel = () => {
 
     // Dual Printer Support: KOT
     prepareOrderData().then(orderData => {
-      fetch('http://localhost:5000/print/kot', {
+      fetch('http://192.168.100.10:5000/print/kot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
