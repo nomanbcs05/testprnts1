@@ -155,7 +155,8 @@ const CartPanel = () => {
       }
 
       // Dual Printer Support: Bill (Receipt)
-      fetch('http://192.168.100.10:5000/print/bill', {
+      const printerIP = localStorage.getItem('printer_server_ip') || '192.168.100.10';
+      fetch(`http://${printerIP}:5000/print/bill`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
@@ -181,7 +182,8 @@ const CartPanel = () => {
     setLastOrder(orderData);
     
     // Removed setShowBill(true) - Using backend printer logic only
-    fetch('http://192.168.100.10:5000/print/bill', {
+    const printerIP = localStorage.getItem('printer_server_ip') || '192.168.100.10';
+    fetch(`http://${printerIP}:5000/print/bill`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData),
@@ -349,7 +351,8 @@ const CartPanel = () => {
 
     // Dual Printer Support: KOT
     prepareOrderData().then(orderData => {
-      fetch('http://192.168.100.10:5000/print/kot', {
+      const printerIP = localStorage.getItem('printer_server_ip') || '192.168.100.10';
+      fetch(`http://${printerIP}:5000/print/kot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),

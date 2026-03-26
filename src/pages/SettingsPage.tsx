@@ -33,6 +33,7 @@ const SettingsPage = () => {
   const [cashier2Lock, setCashier2Lock] = useState((localStorage.getItem('cashier2_lock') || 'true') === 'true');
   const [ordersPwdRequired, setOrdersPwdRequired] = useState((localStorage.getItem('orders_pwd_required') || 'true') === 'true');
   const [ordersActionPwd, setOrdersActionPwd] = useState(localStorage.getItem('orders_action_pwd') || '');
+  const [printerServerIp, setPrinterServerIp] = useState(localStorage.getItem('printer_server_ip') || '192.168.100.10');
 
   useEffect(() => {
     const loadDisplayName = async () => {
@@ -195,6 +196,25 @@ const SettingsPage = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="printerServerIp" className="flex items-center gap-2">
+                        <Bell className="h-4 w-4" />
+                        Printer Server IP
+                      </Label>
+                      <Input
+                        id="printerServerIp"
+                        placeholder="192.168.100.10"
+                        value={printerServerIp}
+                        onChange={(e) => {
+                          setPrinterServerIp(e.target.value);
+                          localStorage.setItem('printer_server_ip', e.target.value);
+                        }}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        The IP address of the PC running the printer-server.
+                      </p>
+                    </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="logoUrl" className="flex items-center gap-2">
                         <ImageIcon className="h-4 w-4" />
